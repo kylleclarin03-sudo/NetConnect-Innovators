@@ -3,7 +3,7 @@ from leaderboard import Leaderboard, Game, Question
 def main():
     leaderboard = Leaderboard()
 
-    # Sample game
+    #sample game
     questions = [
         Question("What is 2 + 2?", "4"),
         Question("Capital of France?", "Paris"),
@@ -12,16 +12,15 @@ def main():
     game = Game("Trivia", questions)
 
     while True:
-        # VISUAL ENHANCEMENT: Customize the menu header, emojis, and separators for branding
         print("\n" + "="*30)
-        print("🏆 LEADERBOARD APP 🏆")  # Change emoji or text for different theme
+        print("🏆 LEADERBOARD APP 🏆")  
         print("="*30)
-        print("1. ➕ Add Player")  # Emojis can be replaced with icons or removed
+        print("1. ➕ Add Player")  
         print("2. 🎮 Play Game")
         print("3. 📈 Update Score Manually")
         print("4. 🏅 View Leaderboard")
         print("5. 🚪 Exit")
-        print("="*30)  # Adjust width for different screen sizes
+        print("="*30)  
 
         try:
             choice = input("Choose an option (1-5): ").strip()
@@ -35,7 +34,7 @@ def main():
                     print("❌ Name cannot be empty.")
                     continue
                 leaderboard.add_player(name)
-                print(f"✅ Player '{name}' added successfully!")  # VISUAL: Success message with checkmark emoji
+                print(f"✅ Player '{name}' added successfully!")  #success message 
 
             elif choice == "2":
                 name = input("Enter player name: ").strip()

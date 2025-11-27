@@ -55,7 +55,7 @@ class Leaderboard:
     def get_all_players(self):
         return list(self.players.values())
 
-# For mini-games, perhaps a simple question class
+#para sa mini-games gumawa muna kami ng simpleng questions
 class Question:
     def __init__(self, question, answer, points=10):
         self.question = question
@@ -69,8 +69,8 @@ class Game:
 
     def play_game(self, player_name, leaderboard):
         score = 0
-        print(f"\n🎮 Starting {self.name} Game for {player_name}!")  # VISUAL: Game start message with emoji
-        print("-" * 40)  # VISUAL: Separator line, adjust length for different themes
+        print(f"\n🎮 Starting {self.name} Game for {player_name}!") 
+        print("-" * 40)  
         for i, q in enumerate(self.questions, 1):
             try:
                 user_answer = input(f"Q{i}: {q.question} ").strip()
