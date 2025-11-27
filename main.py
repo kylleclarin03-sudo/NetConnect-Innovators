@@ -12,53 +12,52 @@ def main():
     game = Game("Trivia", questions)
 
     while True:
-        print("\n" + "="*30)
         print("🏆 LEADERBOARD APP 🏆")  
         print("="*30)
-        print("1. ➕ Add Player")  
-        print("2. 🎮 Play Game")
-        print("3. 📈 Update Score Manually")
-        print("4. 🏅 View Leaderboard")
-        print("5. 🚪 Exit")
+        print("1. Add Player")  
+        print("2. Play Game")
+        print("3. Update Score Manually")
+        print("4. View Leaderboard")
+        print("5. Exit")
         print("="*30)  
 
         try:
             choice = input("Choose an option (1-5): ").strip()
             if not choice:
-                print("❌ Please enter a choice.")
+                print("Please enter a choice.")
                 continue
 
             if choice == "1":
                 name = input("Enter player name: ").strip()
                 if not name:
-                    print("❌ Name cannot be empty.")
+                    print("Name cannot be empty.")
                     continue
                 leaderboard.add_player(name)
-                print(f"✅ Player '{name}' added successfully!")  #success message 
+                print(f"Player '{name}' added successfully!")  #success message 
 
             elif choice == "2":
                 name = input("Enter player name: ").strip()
                 if not name:
-                    print("❌ Name cannot be empty.")
+                    print("Name cannot be empty.")
                     continue
                 game.play_game(name, leaderboard)
 
             elif choice == "3":
                 name = input("Enter player name: ").strip()
                 if not name:
-                    print("❌ Name cannot be empty.")
+                    print("Name cannot be empty.")
                     continue
                 try:
                     points = int(input("Enter points to add: ").strip())
                     leaderboard.update_score(name, points)
-                    print(f"✅ Added {points} points to {name}!")
+                    print(f"Added {points} points to {name}!")
                 except ValueError:
-                    print("❌ Please enter a valid number for points.")
+                    print("Please enter a valid number for points.")
 
             elif choice == "4":
                 top = leaderboard.get_top_players()
                 if not top:
-                    print("📭 No players yet.")
+                    print("No players yet.")
                 else:
                     print("\n🏅 TOP PLAYERS 🏅")
                     print("-" * 20)
@@ -67,17 +66,17 @@ def main():
                     print("-" * 20)
 
             elif choice == "5":
-                print("👋 Goodbye!")
+                print("Goodbye!")
                 break
 
             else:
-                print("❌ Invalid choice. Please select 1-5.")
+                print("Invalid choice. Please select 1-5.")
 
         except KeyboardInterrupt:
-            print("\n👋 Goodbye!")
+            print("\nGoodbye!")
             break
         except Exception as e:
-            print(f"❌ An error occurred: {e}")
+            print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
     main()

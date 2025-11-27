@@ -69,18 +69,18 @@ class Game:
 
     def play_game(self, player_name, leaderboard):
         score = 0
-        print(f"\n🎮 Starting {self.name} Game for {player_name}!") 
+        print(f"\nStarting {self.name} Game for {player_name}!") 
         print("-" * 40)  
         for i, q in enumerate(self.questions, 1):
             try:
                 user_answer = input(f"Q{i}: {q.question} ").strip()
                 if user_answer.lower() == q.answer.lower():
                     score += q.points
-                    print("✅ Correct! +" + str(q.points) + " points")
+                    print("Correct! +" + str(q.points) + " points")
                 else:
-                    print(f"❌ Wrong! Correct answer: {q.answer}")
+                    print(f"Wrong! Correct answer: {q.answer}")
             except KeyboardInterrupt:
-                print("\n⏹️ Game interrupted.")
+                print("\nGame interrupted.")
                 break
         leaderboard.update_score(player_name, score)
-        print(f"\n🎉 {player_name} scored {score} points in {self.name}!")
+        print(f"\n{player_name} scored {score} points in {self.name}!")
