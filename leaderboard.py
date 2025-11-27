@@ -1,18 +1,44 @@
+import json
+import os
+
 class Player:
-    def __init__(self, name):
+    def __init__(self, name, score=0):
         self.name = name
-        self.score = 0
+        self.score = score
 
     def __str__(self):
         return f"{self.name}: {self.score}"
 
+    def to_dict(self):
+        return {"name": self.name, "score": self.score}
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(data["name"], data["score"])
+
 class Leaderboard:
-    def __init__(self):
+    def __init__(self, data_file="data/players.json"):
+        self.data_file = data_file
         self.players = {}
+        self.load_data()
+
+    def load_data(self):
+        if os.path.exists(self.data_file):
+            with open(self.data_file, 'r') as f:
+                data = json.load(f)
+                for player_data in data:
+                    player = Player.from_dict(player_data)
+                    self.players[player.name] = player
+
+    def save_data(self):
+        os.makedirs(os.path.dirname(self.data_file), exist_ok=True)
+        with open(self.data_file, 'w') as f:
+            json.dump([p.to_dict() for p in self.players.values()], f, indent=4)
 
     def add_player(self, name):
         if name not in self.players:
             self.players[name] = Player(name)
+            self.save_data()
 
     def update_score(self, name, points):
         if name in self.players:
@@ -20,6 +46,7 @@ class Leaderboard:
         else:
             self.add_player(name)
             self.players[name].score += points
+        self.save_data()
 
     def get_top_players(self, n=10):
         sorted_players = sorted(self.players.values(), key=lambda p: p.score, reverse=True)
@@ -42,12 +69,18 @@ class Game:
 
     def play_game(self, player_name, leaderboard):
         score = 0
-        for q in self.questions:
-            user_answer = input(f"{q.question} ")
-            if user_answer.lower() == q.answer.lower():
-                score += q.points
-                print("Correct!")
-            else:
-                print(f"Wrong! Correct answer: {q.answer}")
+        print(f"\n🎮 Starting {self.name} Game for {player_name}!")  # VISUAL: Game start message with emoji
+        print("-" * 40)  # VISUAL: Separator line, adjust length for different themes
+        for i, q in enumerate(self.questions, 1):
+            try:
+                user_answer = input(f"Q{i}: {q.question} ").strip()
+                if user_answer.lower() == q.answer.lower():
+                    score += q.points
+                    print("✅ Correct! +" + str(q.points) + " points")
+                else:
+                    print(f"❌ Wrong! Correct answer: {q.answer}")
+            except KeyboardInterrupt:
+                print("\n⏹️ Game interrupted.")
+                break
         leaderboard.update_score(player_name, score)
-        print(f"{player_name} scored {score} points in {self.name}")
+        print(f"\n🎉 {player_name} scored {score} points in {self.name}!")

@@ -12,41 +12,73 @@ def main():
     game = Game("Trivia", questions)
 
     while True:
-        print("\nLeaderboard App")
-        print("1. Add Player")
-        print("2. Play Game")
-        print("3. Update Score Manually")
-        print("4. View Leaderboard")
-        print("5. Exit")
+        # VISUAL ENHANCEMENT: Customize the menu header, emojis, and separators for branding
+        print("\n" + "="*30)
+        print("🏆 LEADERBOARD APP 🏆")  # Change emoji or text for different theme
+        print("="*30)
+        print("1. ➕ Add Player")  # Emojis can be replaced with icons or removed
+        print("2. 🎮 Play Game")
+        print("3. 📈 Update Score Manually")
+        print("4. 🏅 View Leaderboard")
+        print("5. 🚪 Exit")
+        print("="*30)  # Adjust width for different screen sizes
 
-        choice = input("Choose an option: ")
+        try:
+            choice = input("Choose an option (1-5): ").strip()
+            if not choice:
+                print("❌ Please enter a choice.")
+                continue
 
-        if choice == "1":
-            name = input("Enter player name: ")
-            leaderboard.add_player(name)
-            print(f"Player {name} added.")
+            if choice == "1":
+                name = input("Enter player name: ").strip()
+                if not name:
+                    print("❌ Name cannot be empty.")
+                    continue
+                leaderboard.add_player(name)
+                print(f"✅ Player '{name}' added successfully!")  # VISUAL: Success message with checkmark emoji
 
-        elif choice == "2":
-            name = input("Enter player name: ")
-            game.play_game(name, leaderboard)
+            elif choice == "2":
+                name = input("Enter player name: ").strip()
+                if not name:
+                    print("❌ Name cannot be empty.")
+                    continue
+                game.play_game(name, leaderboard)
 
-        elif choice == "3":
-            name = input("Enter player name: ")
-            points = int(input("Enter points to add: "))
-            leaderboard.update_score(name, points)
-            print(f"Added {points} points to {name}.")
+            elif choice == "3":
+                name = input("Enter player name: ").strip()
+                if not name:
+                    print("❌ Name cannot be empty.")
+                    continue
+                try:
+                    points = int(input("Enter points to add: ").strip())
+                    leaderboard.update_score(name, points)
+                    print(f"✅ Added {points} points to {name}!")
+                except ValueError:
+                    print("❌ Please enter a valid number for points.")
 
-        elif choice == "4":
-            top = leaderboard.get_top_players()
-            print("\nTop Players:")
-            for i, player in enumerate(top, 1):
-                print(f"{i}. {player}")
+            elif choice == "4":
+                top = leaderboard.get_top_players()
+                if not top:
+                    print("📭 No players yet.")
+                else:
+                    print("\n🏅 TOP PLAYERS 🏅")
+                    print("-" * 20)
+                    for i, player in enumerate(top, 1):
+                        print(f"{i:2d}. {player}")
+                    print("-" * 20)
 
-        elif choice == "5":
+            elif choice == "5":
+                print("👋 Goodbye!")
+                break
+
+            else:
+                print("❌ Invalid choice. Please select 1-5.")
+
+        except KeyboardInterrupt:
+            print("\n👋 Goodbye!")
             break
-
-        else:
-            print("Invalid choice.")
+        except Exception as e:
+            print(f"❌ An error occurred: {e}")
 
 if __name__ == "__main__":
     main()
