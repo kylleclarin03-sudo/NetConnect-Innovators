@@ -3,11 +3,13 @@ from leaderboard import Leaderboard, Game, Question
 def main():
     leaderboard = Leaderboard()
 
-    #sample game
     questions = [
         Question("What is 2 + 2?", "4"),
         Question("Capital of France?", "Paris"),
-        Question("Python is a?", "language")
+        Question("Python is a?", "language"),
+        Question("The world famous UNESCO Heritage Site Cologne Cathedral is located in which country?", "Germany"),
+        Question("What is the product of 47 * 152?", "7,144"),
+        Question("Is Australia a continent or a country?", "both")
     ]
     game = Game("Trivia", questions)
 
@@ -33,8 +35,7 @@ def main():
                     print("Name cannot be empty.")
                     continue
                 leaderboard.add_player(name)
-                print(f"Player '{name}' added successfully!")  #success message 
-
+                print(f"Player '{name}' added successfully!")
             elif choice == "2":
                 name = input("Enter player name: ").strip()
                 if not name:
