@@ -23,12 +23,27 @@ class Leaderboard:
         self.load_data()
 
     def load_data(self):
-        if os.path.exists(self.data_file):
-            with open(self.data_file, 'r') as f:
-                data = json.load(f)
+    # If file exists AND is not empty
+        if os.path.exists(self.data_file) and os.path.getsize(self.data_file) > 0:
+            try:
+                with open(self.data_file, 'r') as f:
+                    data = json.load(f)
+
+                # Convert JSON players to Player objects
                 for player_data in data:
                     player = Player.from_dict(player_data)
                     self.players[player.name] = player
+
+            except Exception:
+                print("WARNING: Corrupted or invalid JSON detected. Resetting data file...")
+                self.players = {}
+                self.save_data()
+
+        else:
+            # File does not exist OR is empty
+            print("No valid players.json found — creating a new one.")
+            self.players = {}
+            self.save_data()
 
     def save_data(self):
         os.makedirs(os.path.dirname(self.data_file), exist_ok=True)
@@ -42,10 +57,10 @@ class Leaderboard:
 
     def update_score(self, name, points):
         if name in self.players:
-            self.players[name].score += points
+            self.players[name].score = points
         else:
             self.add_player(name)
-            self.players[name].score += points
+            self.players[name].score = points
         self.save_data()
 
     def get_top_players(self, n=10):
@@ -55,12 +70,14 @@ class Leaderboard:
     def get_all_players(self):
         return list(self.players.values())
 
-#para sa mini-games gumawa muna kami ng simpleng questions
+
+#basic questions for mini-game
 class Question:
     def __init__(self, question, answer, points=10):
         self.question = question
         self.answer = answer
         self.points = points
+
 
 class Game:
     def __init__(self, name, questions):
@@ -82,5 +99,13 @@ class Game:
             except KeyboardInterrupt:
                 print("\nGame interrupted.")
                 break
-        leaderboard.update_score(player_name, score)
+        
+        #after game score, maaadd dito yung score ng player
+        if player_name in leaderboard.players:
+            leaderboard.players[player_name].score += score
+        else:
+            leaderboard.add_player(player_name)
+            leaderboard.players[player_name].score = score
+            
+        leaderboard.save_data()
         print(f"\n{player_name} scored {score} points in {self.name}!")
