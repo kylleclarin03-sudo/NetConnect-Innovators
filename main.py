@@ -48,11 +48,11 @@ def main():
                     print("Name cannot be empty.")
                     continue
                 try:
-                    points = int(input("Enter points to add: ").strip())
+                    points = int(input("Enter new score: ").strip())
                     leaderboard.update_score(name, points)
-                    print(f"Added {points} points to {name}!")
+                    print(f"{name}'s score is now set to {points}!")
                 except ValueError:
-                    print("Please enter a valid number for points.")
+                    print("Please enter a valid number for score.")
 
             elif choice == "4":
                 top = leaderboard.get_top_players()

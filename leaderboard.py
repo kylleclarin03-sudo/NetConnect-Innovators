@@ -1,86 +1,82 @@
-import json
-import os
+from leaderboard import Leaderboard, Game, Question
 
-class Player:
-    def __init__(self, name, score=0):
-        self.name = name
-        self.score = score
+def main():
+    leaderboard = Leaderboard()
 
-    def __str__(self):
-        return f"{self.name}: {self.score}"
+    #sample game
+    questions = [
+        Question("What is 2 + 2?", "4"),
+        Question("Capital of France?", "Paris"),
+        Question("Python is a?", "language")
+    ]
+    game = Game("Trivia", questions)
 
-    def to_dict(self):
-        return {"name": self.name, "score": self.score}
+    while True:
+        print("🏆 LEADERBOARD APP 🏆")  
+        print("="*30)
+        print("1. Add Player")  
+        print("2. Play Game")
+        print("3. Update Score Manually")
+        print("4. View Leaderboard")
+        print("5. Exit")
+        print("="*30)  
 
-    @classmethod
-    def from_dict(cls, data):
-        return cls(data["name"], data["score"])
+        try:
+            choice = input("Choose an option (1-5): ").strip()
+            if not choice:
+                print("Please enter a choice.")
+                continue
 
-class Leaderboard:
-    def __init__(self, data_file="data/players.json"):
-        self.data_file = data_file
-        self.players = {}
-        self.load_data()
+            if choice == "1":
+                name = input("Enter player name: ").strip()
+                if not name:
+                    print("Name cannot be empty.")
+                    continue
+                leaderboard.add_player(name)
+                print(f"Player '{name}' added successfully!")  #success message 
 
-    def load_data(self):
-        if os.path.exists(self.data_file):
-            with open(self.data_file, 'r') as f:
-                data = json.load(f)
-                for player_data in data:
-                    player = Player.from_dict(player_data)
-                    self.players[player.name] = player
+            elif choice == "2":
+                name = input("Enter player name: ").strip()
+                if not name:
+                    print("Name cannot be empty.")
+                    continue
+                game.play_game(name, leaderboard)
 
-    def save_data(self):
-        os.makedirs(os.path.dirname(self.data_file), exist_ok=True)
-        with open(self.data_file, 'w') as f:
-            json.dump([p.to_dict() for p in self.players.values()], f, indent=4)
+            elif choice == "3":
+                name = input("Enter player name: ").strip()
+                if not name:
+                    print("Name cannot be empty.")
+                    continue
+                try:
+                    points = int(input("Enter new score: ").strip())
+                    leaderboard.update_score(name, points)
+                    print(f"{name}'s score is now set to {points}!")
+                except ValueError:
+                    print("Please enter a valid number for score.")
 
-    def add_player(self, name):
-        if name not in self.players:
-            self.players[name] = Player(name)
-            self.save_data()
-
-    def update_score(self, name, points):
-        if name in self.players:
-            self.players[name].score += points
-        else:
-            self.add_player(name)
-            self.players[name].score += points
-        self.save_data()
-
-    def get_top_players(self, n=10):
-        sorted_players = sorted(self.players.values(), key=lambda p: p.score, reverse=True)
-        return sorted_players[:n]
-
-    def get_all_players(self):
-        return list(self.players.values())
-
-#para sa mini-games gumawa muna kami ng simpleng questions
-class Question:
-    def __init__(self, question, answer, points=10):
-        self.question = question
-        self.answer = answer
-        self.points = points
-
-class Game:
-    def __init__(self, name, questions):
-        self.name = name
-        self.questions = questions
-
-    def play_game(self, player_name, leaderboard):
-        score = 0
-        print(f"\nStarting {self.name} Game for {player_name}!") 
-        print("-" * 40)  
-        for i, q in enumerate(self.questions, 1):
-            try:
-                user_answer = input(f"Q{i}: {q.question} ").strip()
-                if user_answer.lower() == q.answer.lower():
-                    score += q.points
-                    print("Correct! +" + str(q.points) + " points")
+            elif choice == "4":
+                top = leaderboard.get_top_players()
+                if not top:
+                    print("No players yet.")
                 else:
-                    print(f"Wrong! Correct answer: {q.answer}")
-            except KeyboardInterrupt:
-                print("\nGame interrupted.")
+                    print("\n🏅 TOP PLAYERS 🏅")
+                    print("-" * 20)
+                    for i, player in enumerate(top, 1):
+                        print(f"{i:2d}. {player}")
+                    print("-" * 20)
+
+            elif choice == "5":
+                print("Goodbye!")
                 break
-        leaderboard.update_score(player_name, score)
-        print(f"\n{player_name} scored {score} points in {self.name}!")
+
+            else:
+                print("Invalid choice. Please select 1-5.")
+
+        except KeyboardInterrupt:
+            print("\nGoodbye!")
+            break
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+if __name__ == "__main__":
+    main()
